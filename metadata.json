@@ -1,0 +1,6 @@
+{
+  "name": "Forge Habits",
+  "description": "Clean, ultra-polished iOS-inspired habit tracker with 10-step lifestyle onboarding, daily routines, streak heatmaps, and sleek dark & orange design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
