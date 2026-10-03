@@ -53,7 +53,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.data.HabitRepository
 import com.example.data.model.TaskItem
 import com.example.ui.components.CoolBlackCalendarDialog
-import com.example.ui.components.DailyTimelinePickerDialog
 import com.example.ui.theme.CoralRed
 import com.example.ui.theme.CyanBlue
 import com.example.ui.theme.DarkBorder
@@ -124,8 +123,7 @@ fun AddEditTaskDialog(
     var activeCalendarTarget by remember { mutableStateOf<String?>(null) } // "DUE" or "END" or null
 
     // Daily Timeline
-    var dailyTimeline by remember { mutableStateOf(taskToEdit?.dailyTimeline ?: "10:00 - 12:00 (2h)") }
-    var isTimelinePickerOpen by remember { mutableStateOf(false) }
+    val dailyTimeline = taskToEdit?.dailyTimeline ?: "10:00 - 12:00 (2h)"
 
     // Category
     var selectedCategory by remember { mutableStateOf(taskToEdit?.category ?: "Software Dev") }
@@ -578,48 +576,6 @@ fun AddEditTaskDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(18.dp))
-
-                // Daily Timeline Section (Fully interactive & working!)
-                Text(
-                    text = "Daily Timeline",
-                    color = TextPrimary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(DarkSurfaceElevated)
-                        .border(1.dp, DarkBorder, RoundedCornerShape(16.dp))
-                        .clickable { isTimelinePickerOpen = true }
-                        .padding(horizontal = 14.dp),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = dailyTimeline,
-                            color = TextPrimary,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Icon(
-                            imageVector = Icons.Default.AccessTime,
-                            contentDescription = "Set Daily Timeline",
-                            tint = ElectricOrange,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-                }
-
                 Spacer(modifier = Modifier.height(26.dp))
 
                 // Action Buttons
@@ -715,16 +671,7 @@ fun AddEditTaskDialog(
         )
     }
 
-    // Daily Timeline Picker Dialog
-    if (isTimelinePickerOpen) {
-        DailyTimelinePickerDialog(
-            currentTimeline = dailyTimeline,
-            onTimelineSelected = { chosen ->
-                dailyTimeline = chosen
-            },
-            onDismiss = { isTimelinePickerOpen = false }
-        )
-    }
+
 
     // Create New Workspace Dialog
     if (isCreateWorkspaceDialogOpen) {
