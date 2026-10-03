@@ -311,6 +311,21 @@ fun TasksView(
                         letterSpacing = 1.sp,
                         modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
                     )
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = "➕ Create New Workspace",
+                                color = ElectricOrange,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        onClick = {
+                            newWorkspaceInput = ""
+                            isCreateWorkspaceDialogOpen = true
+                            isTaskOptionsMenuOpen = false
+                        }
+                    )
                     (listOf("All") + activeWorkspaces).take(6).forEach { wsName ->
                         DropdownMenuItem(
                             text = {
@@ -359,127 +374,6 @@ fun TasksView(
                 ),
                 singleLine = true
             )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // WORKSPACE FILTER STRIP (+ button first as requested by user!)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // First item: + Button to create a new workspace
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(OrangeSubtle)
-                    .border(1.2.dp, ElectricOrange, RoundedCornerShape(12.dp))
-                    .clickable {
-                        newWorkspaceInput = ""
-                        isCreateWorkspaceDialogOpen = true
-                    }
-                    .padding(horizontal = 12.dp, vertical = 7.dp)
-                    .testTag("tasks_add_workspace_button")
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Create New Workspace",
-                        tint = ElectricOrange,
-                        modifier = Modifier.size(15.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "New Workspace",
-                        color = ElectricOrange,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            // "All Workspaces" Chip
-            val isAllSelected = selectedWorkspaceFilter == "All"
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(if (isAllSelected) ElectricOrange else DarkSurfaceElevated)
-                    .border(1.dp, if (isAllSelected) ElectricOrange else DarkBorder, RoundedCornerShape(12.dp))
-                    .clickable { selectedWorkspaceFilter = "All" }
-                    .padding(horizontal = 12.dp, vertical = 7.dp)
-            ) {
-                Text(
-                    text = "All (${tasks.size})",
-                    color = if (isAllSelected) Color.White else TextSecondary,
-                    fontSize = 12.sp,
-                    fontWeight = if (isAllSelected) FontWeight.Bold else FontWeight.Medium
-                )
-            }
-
-            // User Workspaces (No mock data, dynamically loaded from user profile!)
-            activeWorkspaces.forEach { ws ->
-                val isSelected = selectedWorkspaceFilter == ws
-                val countInWs = tasks.count { it.clientOrCourse?.equals(ws, ignoreCase = true) == true }
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(if (isSelected) ElectricOrange else DarkSurfaceElevated)
-                        .border(1.dp, if (isSelected) ElectricOrange else DarkBorder, RoundedCornerShape(12.dp))
-                        .clickable { selectedWorkspaceFilter = ws }
-                        .padding(horizontal = 12.dp, vertical = 7.dp)
-                ) {
-                    Text(
-                        text = if (countInWs > 0) "$ws ($countInWs)" else ws,
-                        color = if (isSelected) Color.White else TextSecondary,
-                        fontSize = 12.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // VIEW MODE SELECTOR: Timeline Bento vs Eisenhower 4Q vs Kanban Sprint
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .background(DarkSurfaceElevated)
-                .padding(3.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            listOf(
-                "BENTO" to "📅 Timeline",
-                "EISENHOWER" to "🎯 4-Quadrant",
-                "KANBAN" to "📋 Kanban"
-            ).forEach { (modeKey, label) ->
-                val isSelected = viewMode == modeKey
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(11.dp))
-                        .background(if (isSelected) OrangeSubtle else Color.Transparent)
-                        .border(
-                            1.dp,
-                            if (isSelected) ElectricOrange else Color.Transparent,
-                            RoundedCornerShape(11.dp)
-                        )
-                        .clickable { onSelectViewMode(modeKey) }
-                        .padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = label,
-                        color = if (isSelected) ElectricOrange else TextSecondary,
-                        fontSize = 11.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                    )
-                }
-            }
         }
 
         Spacer(modifier = Modifier.height(14.dp))
